@@ -21,7 +21,7 @@ class StackBoard extends StatefulWidget {
     this.caseStyle = const CaseStyle(),
     this.customBuilder,
     this.tapToCancelAllItem = false,
-    this.tapItemToMoveTop = true, this.operatState,
+    this.tapItemToMoveTop = true, this.operatState, this.onOperatStateChanged,
   }) : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class StackBoard extends StatefulWidget {
 
   /// 点击item移至顶层
   final bool tapItemToMoveTop;
-
+   final bool? Function(OperatState)? onOperatStateChanged;
   late  OperatState? operatState;
 }
 
@@ -159,6 +159,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
   /// 构建项
   Widget _buildItem(StackBoardItem item) {
     Widget child = ItemCase(
+      onOperatStateChanged: widget.onOperatStateChanged,
       key: _getKey(item.id),
       child: Container(
         width: 150,
