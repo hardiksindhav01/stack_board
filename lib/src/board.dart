@@ -111,14 +111,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
   }
 
   /// 取消全部选中
-  void _unFocus() {
-    _operatState = OperatState.complate;
-    safeSetState(() {});
-    Future<void>.delayed(const Duration(milliseconds: 500), () {
-      _operatState = null;
-      safeSetState(() {});
-    });
-  }
+
 
   /// 删除动作
   Future<void> _onDel(StackBoardItem box) async {
@@ -132,7 +125,6 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
 
     if (widget.background == null)
       _child = GestureDetector(
-        onTap: () => _unFocus(),
         child: Container(
           height: 150,
           width: 150,
@@ -155,7 +147,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
 
     if (widget.tapToCancelAllItem) {
       _child = GestureDetector(
-        onTap: _unFocus,
+
         child: _child,
       );
     }
