@@ -14,14 +14,14 @@ import 'item_group/stack_drawing.dart';
 
 /// 层叠板
 class StackBoard extends StatefulWidget {
-  const StackBoard({
+   StackBoard({
     Key? key,
     this.controller,
     this.background,
     this.caseStyle = const CaseStyle(),
     this.customBuilder,
     this.tapToCancelAllItem = false,
-    this.tapItemToMoveTop = true,
+    this.tapItemToMoveTop = true, this.operatState,
   }) : super(key: key);
 
   @override
@@ -44,6 +44,8 @@ class StackBoard extends StatefulWidget {
 
   /// 点击item移至顶层
   final bool tapItemToMoveTop;
+
+  late  OperatState? operatState;
 }
 
 class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
@@ -54,7 +56,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
   int _lastId = 0;
 
   /// 所有item的操作状态
-  OperatState? _operatState;
+
 
   /// 生成唯一Key
   Key _getKey(int? id) => Key('StackBoardItem$id');
@@ -111,10 +113,10 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
 
   /// 取消全部选中
   void _unFocus() {
-    _operatState = OperatState.complate;
+    widget.operatState = OperatState.complate;
     safeSetState(() {});
     Future<void>.delayed(const Duration(milliseconds: 500), () {
-      _operatState = null;
+      widget.operatState = null;
       safeSetState(() {});
     });
   }
@@ -168,7 +170,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
       onDel: () => _onDel(item),
       onTap: () => _moveItemToTop(item.id),
       caseStyle: item.caseStyle,
-      operatState: _operatState,
+      operatState: widget.operatState,
     );
 
     if (item is AdaptiveText) {
@@ -177,7 +179,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
         adaptiveText: item,
         onDel: () => _onDel(item),
         onTap: () => _moveItemToTop(item.id),
-        operatState: _operatState,
+        operatState: widget.operatState,
       );
     } else if (item is StackDrawing) {
       child = DrawingBoardCase(
@@ -185,13 +187,13 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
         stackDrawing: item,
         onDel: () => _onDel(item),
         onTap: () => _moveItemToTop(item.id),
-        operatState: _operatState,
+        operatState: widget.operatState,
       );
     } else {
       child = GestureDetector(
         onTap: () {
-          if (_operatState != OperatState.complate) {
-            _operatState = OperatState.complate;
+          if (widget.operatState != OperatState.complate) {
+            widget.operatState = OperatState.complate;
             safeSetState(() {});
             _unFocus();
           }
@@ -202,7 +204,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
           onDel: () => _onDel(item),
           onTap: () => _moveItemToTop(item.id),
           caseStyle: item.caseStyle,
-          operatState: _operatState,
+          operatState: widget.operatState,
         ),
       );
 
