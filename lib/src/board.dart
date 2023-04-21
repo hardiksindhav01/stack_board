@@ -131,14 +131,17 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
     Widget _child;
 
     if (widget.background == null)
-      _child = Container(
-        height: 150,
-        width: 150,
-        color: CupertinoColors.activeBlue,
-        child: Stack(
-          fit: StackFit.expand,
-          children:
-              _children.map((StackBoardItem box) => _buildItem(box)).toList(),
+      _child = GestureDetector(
+        onTap: () => _unFocus(),
+        child: Container(
+          height: 150,
+          width: 150,
+          color: CupertinoColors.activeBlue,
+          child: Stack(
+            fit: StackFit.expand,
+            children:
+                _children.map((StackBoardItem box) => _buildItem(box)).toList(),
+          ),
         ),
       );
     else
