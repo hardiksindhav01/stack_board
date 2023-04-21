@@ -139,7 +139,13 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
       _child = Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          widget.background!,
+          GestureDetector(
+              onTap: () {
+        if (_operatState == OperatState.complate) {
+          safeSetState(() => _operatState = OperatState.idle);
+        }
+              },
+              child: widget.background!),
           ..._children.map((StackBoardItem box) => _buildItem(box)).toList(),
         ],
       );

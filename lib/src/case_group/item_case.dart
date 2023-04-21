@@ -351,6 +351,7 @@ class _ItemCaseState extends State<ItemCase> with SafeState<ItemCase> {
             if (widget.tools != null) _tools,
             if (widget.canEdit && _operatState != OperatState.complate) _edit,
             if (_operatState != OperatState.complate) _roate,
+            if (_operatState != OperatState.complate) _check,
             if (widget.onDel != null && _operatState != OperatState.complate)
               _del,
             if (_operatState != OperatState.complate) _scale,
@@ -507,6 +508,25 @@ class _ItemCaseState extends State<ItemCase> with SafeState<ItemCase> {
   }
 
   /// 完成操作
+  Widget get _check {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () {
+            if (_operatState != OperatState.complate) {
+              _operatState = OperatState.complate;
+              safeSetState(() {});
+              widget.onOperatStateChanged?.call(_operatState);
+            }
+          },
+          child: _toolCase(const Icon(Icons.check)),
+        ),
+      ),
+    );
+  }
 
   /// 操作手柄壳
   Widget _toolCase(Widget child) {
