@@ -1,5 +1,6 @@
 library stack_board;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_drawing_board/flutter_drawing_board.dart';
 import 'package:stack_board/src/helper/operat_state.dart';
@@ -130,25 +131,14 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
     Widget _child;
 
     if (widget.background == null)
-      _child = GestureDetector(
-        onTap: () {
-          if (_operatState != OperatState.complate) {
-            _operatState = OperatState.complate;
-            safeSetState(() {});
-          }
-        },
-        child: GestureDetector(
-          onTap: () {
-            if (_operatState != OperatState.complate) {
-              _operatState = OperatState.complate;
-              safeSetState(() {});
-            }
-          },
-          child: Stack(
-            fit: StackFit.expand,
-            children:
-                _children.map((StackBoardItem box) => _buildItem(box)).toList(),
-          ),
+      _child = Container(
+        height: 150,
+        width: 150,
+        color: CupertinoColors.activeBlue,
+        child: Stack(
+          fit: StackFit.expand,
+          children:
+              _children.map((StackBoardItem box) => _buildItem(box)).toList(),
         ),
       );
     else
