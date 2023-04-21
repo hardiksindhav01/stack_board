@@ -20,7 +20,6 @@ class StackBoard extends StatefulWidget {
     this.background,
     this.caseStyle = const CaseStyle(),
     this.customBuilder,
-    this.onOperatStateChanged,
     this.tapToCancelAllItem = false,
     this.tapItemToMoveTop = true,
   }) : super(key: key);
@@ -30,7 +29,7 @@ class StackBoard extends StatefulWidget {
 
   /// 层叠版控制器
   final StackBoardController? controller;
-  final bool? Function(OperatState)? onOperatStateChanged;
+
   /// 背景
   final Widget? background;
 
@@ -131,39 +130,18 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
     Widget _child;
 
     if (widget.background == null)
-      _child = GestureDetector(
-        onTap: () {
-      if (_operatState != OperatState.complate) {
-        _operatState = OperatState.complate;
-        safeSetState(() {});
-        widget.onOperatStateChanged?.call(_operatState!);
-      }
-
-        },
-        child: Stack(
-          fit: StackFit.expand,
-          children:
-              _children.map((StackBoardItem box) => _buildItem(box)).toList(),
-        ),
+      _child = Stack(
+        fit: StackFit.expand,
+        children:
+            _children.map((StackBoardItem box) => _buildItem(box)).toList(),
       );
     else
-      _child = GestureDetector(
-
-        onTap: () {
-          if (_operatState != OperatState.complate) {
-            _operatState = OperatState.complate;
-            safeSetState(() {});
-            widget.onOperatStateChanged?.call(_operatState!);
-          }
-
-        },
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            widget.background!,
-            ..._children.map((StackBoardItem box) => _buildItem(box)).toList(),
-          ],
-        ),
+      _child = Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          widget.background!,
+          ..._children.map((StackBoardItem box) => _buildItem(box)).toList(),
+        ],
       );
 
     if (widget.tapToCancelAllItem) {
