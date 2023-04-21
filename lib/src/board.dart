@@ -1,6 +1,5 @@
 library stack_board;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_drawing_board/flutter_drawing_board.dart';
 import 'package:stack_board/src/helper/operat_state.dart';
@@ -21,6 +20,7 @@ class StackBoard extends StatefulWidget {
     this.background,
     this.caseStyle = const CaseStyle(),
     this.customBuilder,
+    this.onOperatStateChanged,
     this.tapToCancelAllItem = false,
     this.tapItemToMoveTop = true,
   }) : super(key: key);
@@ -30,7 +30,7 @@ class StackBoard extends StatefulWidget {
 
   /// 层叠版控制器
   final StackBoardController? controller;
-
+  final bool? Function(OperatState)? onOperatStateChanged;
   /// 背景
   final Widget? background;
 
@@ -111,7 +111,14 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
   }
 
   /// 取消全部选中
-
+  void _unFocus() {
+    _operatState = OperatState.complate;
+    safeSetState(() {});
+    Future<void>.delayed(const Duration(milliseconds: 500), () {
+      _operatState = null;
+      safeSetState(() {});
+    });
+  }
 
   /// 删除动作
   Future<void> _onDel(StackBoardItem box) async {
@@ -125,15 +132,18 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
 
     if (widget.background == null)
       _child = GestureDetector(
-        child: Container(
-          height: 150,
-          width: 150,
-          color: CupertinoColors.activeBlue,
-          child: Stack(
-            fit: StackFit.expand,
-            children:
-                _children.map((StackBoardItem box) => _buildItem(box)).toList(),
-          ),
+        onTap: () {
+      if (_operatState != OperatState.complate) {
+        _operatState = OperatState.complate;
+        safeSetState(() {});
+        widget.onOperatStateChanged?.call(_operatState!);
+      }
+
+        },
+        child: Stack(
+          fit: StackFit.expand,
+          children:
+              _children.map((StackBoardItem box) => _buildItem(box)).toList(),
         ),
       );
     else
@@ -147,7 +157,7 @@ class _StackBoardState extends State<StackBoard> with SafeState<StackBoard> {
 
     if (widget.tapToCancelAllItem) {
       _child = GestureDetector(
-
+        onTap: _unFocus,
         child: _child,
       );
     }
